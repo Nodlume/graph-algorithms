@@ -1,3 +1,8 @@
+/**
+ * Node-pair association scores derived from shared neighbors: raw
+ * co-occurrence counts and PMI/PPMI. Each function compares every unordered
+ * pair of nodes once (O(n²) pairs) and returns only pairs with a nonzero score.
+ */
 import type { Graph, NodeId } from "@quokkaquery/graph";
 import type { NodePairScore } from "./types.js";
 
@@ -88,7 +93,8 @@ export function pmi<T, E>(graph: Graph<T, E>): NodePairScore[] {
 
 /**
  * Positive PMI (PPMI) — same as PMI but clamps negative values to 0.
- * Returns all pairs with PMI >= 0.
+ * Pairs whose clamped score is 0 are omitted, so only pairs with strictly
+ * positive PMI are returned and the output matches `pmi`.
  */
 export function ppmi<T, E>(graph: Graph<T, E>): NodePairScore[] {
   const ids = graph.nodeIds();

@@ -1,3 +1,9 @@
+/**
+ * Weighted shortest-path algorithms over a `Graph`: Bellman-Ford for single
+ * sources with negative weights, Floyd-Warshall for all pairs, and A* for
+ * heuristic-guided point-to-point search. Bellman-Ford and Floyd-Warshall
+ * throw on negative-weight cycles rather than returning meaningless distances.
+ */
 import type { Graph, NodeId } from "@quokkaquery/graph";
 import type {
   ShortestPathResult,
@@ -145,7 +151,11 @@ export function floydWarshall<T, E>(
 }
 
 /**
- * Reconstruct the shortest path between two nodes from Floyd-Warshall results.
+ * Walks the `nextHop` matrix from `floydWarshall` to rebuild the node sequence
+ * from `source` to `target`, inclusive. Returns undefined when `target` is
+ * unreachable or either node is missing from the matrix. Also returns
+ * undefined when `source === target`, because Floyd-Warshall leaves the
+ * diagonal next-hop entries null.
  */
 export function reconstructPath(
   nextHop: NextHopMatrix,
@@ -168,9 +178,13 @@ export function reconstructPath(
 
 /**
  * A* shortest path with a heuristic function.
- * The heuristic must be admissible (never overestimate) for optimality.
+ * Expanded nodes are closed and never reopened, so the heuristic must be
+ * consistent (h(u) <= w(u,v) + h(v), which implies admissible) for the
+ * result to be optimal; an admissible but inconsistent heuristic can return
+ * a longer path. The open list is a plain array re-sorted on every pop, so
+ * each step costs O(k log k) in the open-list size.
  *
- * @param heuristic - Estimates cost from a node to the goal.
+ * @param heuristic - Estimates cost from a node to the goal; called as `heuristic(node, goal)`.
  * @returns Shortest path result, or undefined if unreachable.
  */
 export function astar<T, E>(

@@ -1,3 +1,8 @@
+/**
+ * Neighborhood-overlap node similarity and link-prediction scores. Every
+ * measure here is computed only from `graph.neighbors`, so edge data and
+ * weights are ignored.
+ */
 import type { Graph, NodeId } from "@quokkaquery/graph";
 import type { NodePairScore } from "./types.js";
 
@@ -64,6 +69,9 @@ export function allJaccardSimilarities<T, E>(
  * Treats the adjacency row as a binary vector.
  *
  * cos(a,b) = |N(a) ∩ N(b)| / (√|N(a)| * √|N(b)|)
+ *
+ * @returns Score between 0 and 1, or undefined if either node has no
+ *   neighbors (unlike Jaccard, which needs both to be empty).
  */
 export function cosineSimilarity<T, E>(
   graph: Graph<T, E>,
@@ -82,7 +90,8 @@ export function cosineSimilarity<T, E>(
 }
 
 /**
- * Common neighbors count between two nodes.
+ * Neighbors shared by both nodes, returned as IDs (not a count) in the order
+ * `graph.neighbors(a)` yields them; take `.length` for the classic score.
  */
 export function commonNeighbors<T, E>(
   graph: Graph<T, E>,
@@ -99,6 +108,9 @@ export function commonNeighbors<T, E>(
  * to neighbors that are themselves less connected (more "specific").
  *
  * AA(a,b) = Σ_{z ∈ N(a) ∩ N(b)} 1 / log(|N(z)|)
+ *
+ * Uses the natural log. Shared neighbors of degree 1 are skipped, since
+ * log(1) = 0 would divide by zero.
  */
 export function adamicAdar<T, E>(
   graph: Graph<T, E>,

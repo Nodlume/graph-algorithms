@@ -2,7 +2,7 @@
 
 > Built and maintained by [QuokkaQuery](https://quokkaquery.com). Source on [GitHub](https://github.com/Nodlume/graph-algorithms).
 
-Advanced graph algorithms built on [`@quokkaquery/graph`](../graph). Covers shortest paths, spanning trees, connectivity, centrality, network flow, similarity, co-occurrence, and community detection.
+Advanced graph algorithms built on [`@quokkaquery/graph`](https://www.npmjs.com/package/@quokkaquery/graph). Covers shortest paths, spanning trees, connectivity, centrality, network flow, similarity, co-occurrence, and community detection.
 
 ## Install
 
@@ -10,7 +10,7 @@ Advanced graph algorithms built on [`@quokkaquery/graph`](../graph). Covers shor
 npm install @quokkaquery/graph-algorithms
 ```
 
-Depends on `@quokkaquery/graph` via `file:../graph`. Rebuild `graph` first if you've modified it.
+Pure TypeScript with no runtime dependencies other than `@quokkaquery/graph`, which npm installs automatically.
 
 ## Usage
 

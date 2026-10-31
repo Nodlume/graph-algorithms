@@ -1,3 +1,10 @@
+/**
+ * Public entry point for the graph-algorithms package. Re-exports the shared
+ * result types and every algorithm family (shortest paths, spanning trees,
+ * connectivity, centrality, max flow, co-occurrence, similarity, clustering)
+ * from one place. Documentation for each symbol lives in its source module;
+ * anything not listed here is internal to the package.
+ */
 export type {
   ShortestPathResult,
   DistanceMap,

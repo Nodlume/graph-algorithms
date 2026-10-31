@@ -1,3 +1,7 @@
+/**
+ * Shared result, lookup-table and callback types for the graph algorithms,
+ * all keyed by `NodeId` from `@quokkaquery/graph`. Type-only: no runtime code.
+ */
 import type { NodeId } from "@quokkaquery/graph";
 
 /** Result of a shortest-path algorithm. */

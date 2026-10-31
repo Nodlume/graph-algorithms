@@ -1,3 +1,8 @@
+/**
+ * Local structure and community detection: per-node and average clustering
+ * coefficients, triangle counts, label propagation and Louvain-style
+ * community assignment, and a modularity score for judging an assignment.
+ */
 import type { Graph, NodeId } from "@quokkaquery/graph";
 
 /**
@@ -168,9 +173,13 @@ export function extractCommunities(labels: Map<NodeId, NodeId>): NodeId[][] {
 
 /**
  * Louvain community detection (modularity optimization).
- * Greedy agglomerative method that maximizes modularity.
+ * Runs only the local-moving phase: each node greedily joins the neighbouring
+ * community with the largest positive gain, repeated for at most 20 passes.
+ * There is no community-aggregation phase, so the result is a local optimum
+ * rather than the full multi-level Louvain partition.
  *
- * @returns Map of node id → community id (number).
+ * @returns Map of node id → community id, renumbered to 0..k-1. A graph with
+ *   zero total edge weight returns every node in its own community.
  */
 export function louvain<T, E>(graph: Graph<T, E>): Map<NodeId, number> {
   const ids = graph.nodeIds();
@@ -279,7 +288,13 @@ export function louvain<T, E>(graph: Graph<T, E>): Map<NodeId, number> {
  * Modularity score for a given community assignment.
  * Q = (1/2m) Σ [A_ij - (k_i * k_j)/(2m)] * δ(c_i, c_j)
  *
- * @returns Modularity value between -0.5 and 1.
+ * Compares every node pair, so cost is O(n²). Nodes missing from
+ * `communities` all compare equal (undefined) and so count as one community.
+ *
+ * @returns Modularity value; 0 when total edge weight is 0. The [-0.5, 1]
+ *   range holds for undirected graphs only. For directed graphs the
+ *   normaliser is the plain edge-weight sum while degrees combine in- and
+ *   out-weight, so the value can fall below -0.5.
  */
 export function modularity<T, E>(
   graph: Graph<T, E>,

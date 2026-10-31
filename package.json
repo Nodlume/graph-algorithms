@@ -1,6 +1,6 @@
 {
   "name": "@quokkaquery/graph-algorithms",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Advanced graph algorithms built on @quokkaquery/graph",
   "keywords": [
     "graph",

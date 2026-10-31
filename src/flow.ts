@@ -1,3 +1,8 @@
+/**
+ * Maximum flow over a weighted directed graph. The residual network is built
+ * in local maps keyed by `from->to` strings, so the input graph is only read,
+ * never mutated.
+ */
 import type { Graph, NodeId } from "@quokkaquery/graph";
 import type { MaxFlowResult } from "./types.js";
 

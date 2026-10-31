@@ -1,3 +1,7 @@
+/**
+ * Minimum spanning tree algorithms. Both return the selected edges
+ * rather than a new graph; edge weights are read from `Edge.weight`.
+ */
 import type { Graph, NodeId, Edge } from "@quokkaquery/graph";
 
 /**
@@ -55,9 +59,16 @@ export function kruskal<T, E>(graph: Graph<T, E>): Edge<E>[] {
 
 /**
  * Prim's minimum spanning tree starting from a given node.
- * Works on undirected graphs.
+ * Works on undirected graphs. Only edges returned by `outEdges` are
+ * followed, so on a directed graph the tree covers just the nodes
+ * reachable from `start` along edge direction.
  *
- * @returns Array of edges forming the MST.
+ * Unlike {@link kruskal}, this does not produce a forest: on a
+ * disconnected graph the result spans only the start node's component.
+ *
+ * @param start Root of the tree; defaults to the first id from `graph.nodeIds()`.
+ * @returns Edges in the order they were added to the tree (not globally
+ *   sorted by weight); empty for a graph with no nodes.
  */
 export function prim<T, E>(graph: Graph<T, E>, start?: NodeId): Edge<E>[] {
   const ids = graph.nodeIds();

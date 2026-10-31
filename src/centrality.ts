@@ -1,11 +1,20 @@
+/**
+ * Node centrality measures (PageRank, betweenness, closeness, degree).
+ * Each returns a score for every node in the graph. None of them read edge
+ * data: every edge counts as one unweighted hop.
+ */
 import type { Graph, NodeId } from "@quokkaquery/graph";
 
 /**
  * PageRank algorithm.
+ * Rank held by nodes with no outgoing edges is spread evenly across all
+ * nodes each iteration, so it is not lost from the total.
  *
  * @param dampingFactor - Probability of following an edge (default 0.85).
- * @param iterations - Number of power iterations (default 100).
- * @param tolerance - Convergence threshold (default 1e-6).
+ * @param iterations - Maximum number of power iterations (default 100);
+ *   stops earlier once converged.
+ * @param tolerance - Converged when no node's score changes by this much
+ *   or more in one iteration (default 1e-6).
  * @returns Map of node id → PageRank score (sums to ~1).
  */
 export function pageRank<T, E>(
@@ -135,8 +144,9 @@ export function betweennessCentrality<T, E>(
 
 /**
  * Closeness centrality.
- * Defined as n-1 / sum(shortest distances to all other reachable nodes).
- * Returns 0 for isolated nodes.
+ * Defined as r / sum(shortest distances to the r nodes reachable from it),
+ * so unreachable nodes are ignored rather than penalised.
+ * Returns 0 for nodes that cannot reach any other node.
  *
  * Uses unweighted BFS distances.
  */

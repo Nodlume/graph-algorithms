@@ -1,3 +1,11 @@
+/**
+ * Connectivity structure of a graph: strongly connected components and their
+ * condensation DAG, bridges, articulation points, and bipartiteness.
+ *
+ * The SCC, bridge and articulation-point searches use recursive DFS, so call
+ * depth grows with the longest DFS path and very deep graphs can exhaust the
+ * JavaScript call stack.
+ */
 import { Graph as GraphClass, type NodeId } from "@quokkaquery/graph";
 import type { Graph } from "@quokkaquery/graph";
 
@@ -5,7 +13,7 @@ import type { Graph } from "@quokkaquery/graph";
 
 /**
  * Tarjan's algorithm for strongly connected components.
- * Only meaningful for directed graphs.
+ * Throws if the graph is undirected.
  *
  * @returns Array of components, each being an array of node ids.
  *          Components are in reverse topological order.
@@ -106,7 +114,8 @@ export function condensation<T, E>(
  *
  * Uses Tarjan's bridge-finding algorithm.
  *
- * @returns Array of [from, to] pairs representing bridges.
+ * @returns Array of [parent, child] pairs in DFS-tree orientation, which
+ *          may be the reverse of the edge's stored from/to.
  */
 export function findBridges<T, E>(graph: Graph<T, E>): [NodeId, NodeId][] {
   let timer = 0;
